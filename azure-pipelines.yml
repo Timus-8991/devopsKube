@@ -1,0 +1,57 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+
+name: 1.1.$(patchno)$(Rev:.r)
+
+trigger:
+- master
+
+
+pool:
+  vmImage: 'ubuntu-16.04'
+
+variables:
+  patchno: 0
+  buildConfiguration: 'Release'
+  dockerId: aksRegistry57
+  imageName: aksdemoimage:$(Build.BuildNumber)
+  password: /PS1rRCN2PVxspQTaPt53KwClitbjB1Q
+
+#$(Build.BuildNumber)
+
+steps:
+- script: dotnet restore
+- script: dotnet build --configuration $(buildConfiguration)
+  displayName: 'dotnet build $(buildConfiguration)'
+
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet publish --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+  inputs:
+    command: publish
+    publishWebProjects: false
+    projects: 'aksDemo.csproj'
+    arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: true
+
+#- task: versioncounter@1
+#  inputs:
+#    VersionVariable: 'versionnumber'
+#    DevOpsPat: '7s624dlgtvqjrmbd4gs5lxtzev5jgh3jzlubjiae3ghaxdo45buq'
+
+- script: |
+    docker build -t $(imageName) .
+    docker login -u $(dockerId) -p $(password) $(dockerId).azurecr.io
+    docker tag $(imageName) $(dockerId).azurecr.io/$(imageName)
+    docker push $(dockerId).azurecr.io/$(imageName)
+
+- task: CopyFiles@2
+  inputs:
+    targetFolder: '$(Build.ArtifactStagingDirectory)' 
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
