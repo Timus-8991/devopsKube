@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 
-name: 1.1.$(Rev:.r)
+name: 1.1$(Rev:.r)
 
 trigger:
 - master
