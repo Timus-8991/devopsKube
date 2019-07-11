@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 
-name: $(version)$(Rev:.r)
+name: 1.1.$(Rev:.r)
 
 trigger:
 - master
@@ -14,7 +14,6 @@ pool:
   vmImage: 'ubuntu-16.04'
 
 variables:
-  version: "V"
   buildConfiguration: 'Release'
   dockerId: aksRegistry57
   imageName: devopsKubeImage:$(Build.BuildNumber)
