@@ -16,7 +16,7 @@ pool:
 variables:
   buildConfiguration: 'Release'
   dockerId: aksRegistry57
-  imageName: devopsKubeImage:$(Build.BuildNumber)
+  imageName: devopskubeimage:$(Build.BuildNumber)
   password: /PS1rRCN2PVxspQTaPt53KwClitbjB1Q
 
 #$(Build.BuildNumber)
