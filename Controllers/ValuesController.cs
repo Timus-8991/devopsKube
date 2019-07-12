@@ -14,7 +14,7 @@ namespace devopsSessionKubernetes.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "inside", "devopsSessionKubernetes test 1" };
+            return new string[] { "inside", "devopsSessionKubernetes test 2" };
         }
 
         // GET api/values/5
